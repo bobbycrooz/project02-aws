@@ -16,17 +16,21 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
     "/filteredimage",
     (req, res, next) => {
       // authentication
-      const authorization = req.headers.authorization.split(" ");
-      const token = authorization[1];
-      if (!token) {
-        res.status(401).send("not authorized").end();
-      }
+      // const authorization = req.headers.authorization.split(" ");
+
+      // const token = authorization[1];
+
+      // if (!token) {
+      //   res.status(401).send("not authorized").end();
+      // }
 
       next();
     },
     async (req, res) => {
       const { image_url } = req.query;
+
       if (!image_url) return res.send("no image url provided").end();
+
       try {
         let filteredImagePath = await filterImageFromURL(image_url);
         if (filteredImagePath) {
