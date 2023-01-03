@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import { filterImageFromURL, deleteLocalFiles } from "./util/util";
 
@@ -12,42 +12,42 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  app.get(
-    "/filteredimage",
-    (req, res, next) => {
-      // authentication
-      // const authorization = req.headers.authorization.split(" ");
+  const ImageController = async (req: Request, res: Response) => {
+    const { image_url } = req.query;
 
-      // const token = authorization[1];
+    if (!image_url) return res.send("no image url provided").end();
 
-      // if (!token) {
-      //   res.status(401).send("not authorized").end();
-      // }
+    try {
+      let filteredImagePath: string = await filterImageFromURL(image_url);
 
-      next();
-    },
-    async (req, res) => {
-      const { image_url } = req.query;
+      console.log(filteredImagePath);
 
-      if (!image_url) return res.send("no image url provided").end();
+      res.sendFile(filteredImagePath);
 
-      try {
-        let filteredImagePath = await filterImageFromURL(image_url);
-        if (filteredImagePath) {
-          res.sendFile(filteredImagePath);
-          deleteLocalFiles([filteredImagePath]);
-        }
+      // files to be deleted from Server after 30s of sending the file
+      setTimeout(() => {
+        deleteLocalFiles([filteredImagePath]);
+      }, 30000);
 
-        return;
-      } catch (error) {
-        res.status(401).send({ error: error });
-      }
+      // return deleteLocalFiles([filteredImagePath]);
+    } catch (error) {
+      res.status(401).send({ error: error });
     }
-  );
+  };
+
+  const ImageFilterMiddleware = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    next();
+  };
+
+  app.get("/filteredimage", ImageFilterMiddleware, ImageController);
 
   // Root Endpoint
   // Displays a simple message to the user
-  app.get("/", async (req, res) => {
+  app.get("/", async (req: Request, res: Response) => {
     res.send("try GET /filteredimage?image_url={{}}");
   });
 

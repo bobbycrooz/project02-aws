@@ -12,15 +12,23 @@ export async function filterImageFromURL(inputURL: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
       const photo = await Jimp.read(inputURL);
+
       const outpath =
         "/tmp/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
-      await photo
+      photo
         .resize(256, 256) // resize
         .quality(60) // set JPEG quality
-        .greyscale() // set greyscale
-        .write(__dirname + outpath, (img) => {
+        .greyscale(); // set greyscale
+
+      photo.write(__dirname + outpath, (img) => {
+        // files were beign sent befere they were been created on the serve so I added a timeout to wait for the file to be created
+
+        setTimeout(() => {
           resolve(__dirname + outpath);
-        });
+        }, 2000);
+      });
+
+      // if (__dirname + outpath) console.log("outpathhas done its job");
     } catch (error) {
       reject(error);
     }
