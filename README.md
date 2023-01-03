@@ -5,3 +5,7 @@ Add your own domain name and have it point to the running services (try adding a
 > !NOTE: Domain names are not included in AWS’ free tier and will incur a cost.
 >
 > (project-02-live-deployed url)[http://imagefilterer-dev.us-east-1.elasticbeanstalk.com/]
+>
+> [main github branch](https://github.com/bobbycrooz/project02-aws)
+> [dev github branch](https://github.com/bobbycrooz/project02-aws/tree/dev)
+> 
