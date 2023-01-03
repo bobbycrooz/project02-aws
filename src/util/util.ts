@@ -9,7 +9,9 @@ import Jimp = require("jimp");
 // RETURNS
 //    an absolute path to a filtered image locally saved file
 export async function filterImageFromURL(inputURL: string): Promise<string> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve: Function, reject: Function) => {
+    console.log(typeof resolve, typeof reject, "this types come");
+
     try {
       const photo = await Jimp.read(inputURL);
 
@@ -32,7 +34,7 @@ export async function filterImageFromURL(inputURL: string): Promise<string> {
     } catch (error) {
       reject(error);
     }
-  });
+  }) as Promise<string>;
 }
 
 // deleteLocalFiles

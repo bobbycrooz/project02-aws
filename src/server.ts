@@ -27,7 +27,7 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
       // files to be deleted from Server after 30s of sending the file
       setTimeout(() => {
         deleteLocalFiles([filteredImagePath]);
-      }, 30000);
+      }, 2000);
 
       // return deleteLocalFiles([filteredImagePath]);
     } catch (error) {
